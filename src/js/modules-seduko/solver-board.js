@@ -1,5 +1,4 @@
-const validSudoku = require("./app.js");
-const randomSu = require("./random-board.js");
+const validSudoku = require("./valid-board.js");
 
 let possibilities = [];
 const setNumber = (hor, ver, oldValue, board) => {
