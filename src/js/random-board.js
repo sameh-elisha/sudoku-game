@@ -1,5 +1,5 @@
 const validSudoku = require("./valid-board.js");
-const solverSudoku = require("./solve.js");
+const solverSudoku = require("./solve-board.js");
 
 // Create board 9*9 with random 10 element
 const createRandomBoard = () => {
