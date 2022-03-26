@@ -1,17 +1,14 @@
-const validSudoku = require("./vaild-board.js");
+const validSudoku = require("./app.js");
+const solverSudoku = require("./solve.js");
 
-const createRandomBoard = (level) => {
+// Create board 9*9 with random 10 element
+const createRandomBoard = () => {
   // Initialize board 9 rows value Array => value = ""
   let board = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => ""));
-  let maxItems = 0;
-  // Select Level
-  if (level === "hard") maxItems = 25;
-  else if (level === "medium") maxItems = 30;
-  else maxItems = 35;
+  let maxItems = 10;
   // Initialize variables.
   let fieldX = 0;
   let fieldY = 0;
-  let countItemsAdded = 0;
   let lenItems = 0;
   let temp = "";
   while (true) {
@@ -23,16 +20,48 @@ const createRandomBoard = (level) => {
     // Check value is valid.
     temp = board[fieldX][fieldY];
     board[fieldX][fieldY] = value + "";
-    if (validSudoku.isValidSudoku(board)) {
-      countItemsAdded++;
-    } else {
-      board[fieldX][fieldY] = temp;
-    }
+    if (!validSudoku.isValidSudoku(board)) board[fieldX][fieldY] = temp;
     // Check number of elements added to board.
     lenItems = board.flat().filter((elm) => elm !== "").length;
     if (lenItems >= maxItems) break;
   }
+  board = solverSudoku.solveSudoku(board);
   return board;
 };
+
+// Set random element in solved board by value ""
+const clearFields = (solvedBoard, len) => {
+  var newBoard = solvedBoard.map(function (arr) {
+    return [...arr];
+  });
+  let maxItems = len;
+  let fieldX = 0;
+  let fieldY = 0;
+  let lenItems = 0;
+  while (true) {
+    fieldX = Math.floor(Math.random() * 9);
+    fieldY = Math.floor(Math.random() * 9);
+    newBoard[fieldX][fieldY] = "";
+    lenItems = newBoard.flat().filter((elm) => elm !== "").length;
+    if (lenItems <= maxItems) break;
+  }
+  return [newBoard, solvedBoard];
+};
+
+// Return board with different levels && solved board;
+const selectDifficulty = (level) => {
+  let lenElement = 0;
+  if (level === "hard") {
+    lenElement = 25;
+  } else if (level === "medium") {
+    lenElement = 30;
+  } else {
+    lenElement = 35;
+  }
+  let [newBoard, solvedBoard] = clearFields(createRandomBoard(), lenElement);
+  return [newBoard, solvedBoard];
+};
+
+// console.log(selectDifficulty("easy"));
 
 exports.createRandomBoard = createRandomBoard;
