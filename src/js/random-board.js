@@ -1,4 +1,4 @@
-const validSudoku = require("./app.js");
+const validSudoku = require("./valid-board.js");
 const solverSudoku = require("./solve.js");
 
 // Create board 9*9 with random 10 element
