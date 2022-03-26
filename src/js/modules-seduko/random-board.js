@@ -31,7 +31,7 @@ const createRandomBoard = () => {
 
 // Set random element in solved board by value ""
 const clearFields = (solvedBoard, len) => {
-  var newBoard = solvedBoard.map(function (arr) {
+  var newBoard = solvedBoard.map((arr) => {
     return [...arr];
   });
   let maxItems = len;
