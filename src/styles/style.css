@@ -1,0 +1,58 @@
+* {
+  padding: 0;
+  margin: 0;
+  font-family: "Itim", cursive;
+  box-sizing: border-box;
+  color: white;
+}
+
+.container {
+  background-color: #1b1a30;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  background-color: rgb(42, 42, 57);
+  font: 2rem;
+  color: white;
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: background 0.4s ease-in-out;
+}
+
+.first-screen {
+  display: flex;
+  flex-direction: column;
+}
+main div:hover {
+  background-color: rgb(38, 38, 112);
+}
+.new-game {
+  background-color: #0095e6;
+  color: #fff;
+}
+
+.new-game:hover {
+  background-color: #00679e;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.hide {
+  display: none;
+}
