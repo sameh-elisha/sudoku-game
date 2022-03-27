@@ -1,2 +1,2 @@
-# seduko-game
- Seduko 
+# Sudoku-game
+ Sudoku  
