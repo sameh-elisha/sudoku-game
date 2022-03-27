@@ -15,15 +15,19 @@ const setNumber = (hor, ver, oldValue, board) => {
   if (possibilities.length > 0) {
     let [felidX, felidY] = possibilities.pop();
     setNumber(felidX, felidY, board[felidX][felidY], board);
+    setNumber(hor, ver, board[hor][ver], board);
+  } else {
+    return "Board is invalid.";
   }
-  setNumber(hor, ver, board[hor][ver], board);
 };
 
 const solveSudoku = (board) => {
+  let check;
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
       if (board[i][j] === "") {
         setNumber(i, j, "", board);
+        if (check === "Board is invalid.") return check;
       }
     }
   }
