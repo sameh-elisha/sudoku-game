@@ -64,4 +64,4 @@ const selectDifficulty = (level) => {
 
 // console.log(selectDifficulty("easy"));
 
-exports.createRandomBoard = createRandomBoard;
+exports.selectDifficulty = selectDifficulty;
