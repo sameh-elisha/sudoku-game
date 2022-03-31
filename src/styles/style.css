@@ -61,6 +61,7 @@ main .btn:hover {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   width: 300px;
+  margin-bottom: 10px;
 }
 .box {
   display: flex;
