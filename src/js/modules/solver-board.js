@@ -1,12 +1,12 @@
-const validSudoku = require("./valid-board.js");
-
+"use strict";
+import { isValidBox } from "./valid-box.js";
 let possibilities = [];
 const setNumber = (hor, ver, oldValue, board) => {
   if (oldValue === "") oldValue = 0;
   oldValue = parseInt(oldValue);
   for (let i = oldValue + 1; i <= 9; i++) {
     board[hor][ver] = i + "";
-    if (validSudoku.isValidSudoku(board)) {
+    if (isValidBox(board, hor, ver)) {
       possibilities.push([hor, ver]);
       return;
     }
@@ -33,5 +33,5 @@ const solveSudoku = (board) => {
   }
   return board;
 };
-
-exports.solveSudoku = solveSudoku;
+export { solveSudoku };
+// exports.solveSudoku = solveSudoku;

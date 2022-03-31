@@ -1,5 +1,7 @@
-const solverSudoku = require("./solve-board.js.js");
-const isValidBox = require("./valid-box.js");
+"use strict";
+// const solverSudoku = import("./solve-board.js.js");
+import { solveSudoku } from "./solver-board.js";
+import { isValidBox } from "./valid-box.js";
 
 // Create board 9*9 with random 10 element
 const createRandomBoard = () => {
@@ -9,6 +11,7 @@ const createRandomBoard = () => {
   // Initialize variables.
   let row = 0;
   let col = 0;
+  let value = 0;
   let lenItems = 0;
   let temp = "";
   let x = 0;
@@ -21,7 +24,7 @@ const createRandomBoard = () => {
     // Check value is valid.
     temp = board[row][col];
     board[row][col] = value + "";
-    if (!isValidBox.isValidBox(board, row, col)) board[row][col] = temp;
+    if (!isValidBox(board, row, col)) board[row][col] = temp;
     // Check number of elements added to board.
     lenItems = board.flat().filter((elm) => elm !== "").length;
     if (lenItems >= maxItems) break;
@@ -64,13 +67,14 @@ const selectDifficulty = (level) => {
   let newBoard, solvedBoard;
   while (true) {
     try {
-      [newBoard, solvedBoard] = clearFields(solverSudoku.solveSudoku(createRandomBoard()), lenElement);
+      [newBoard, solvedBoard] = clearFields(solveSudoku(createRandomBoard()), lenElement);
       break;
     } catch {}
   }
   return [newBoard, solvedBoard];
 };
 
+export { selectDifficulty };
 // selectDifficulty("easy");
 
-exports.selectDifficulty = selectDifficulty;
+// exports.selectDifficulty = selectDifficulty;

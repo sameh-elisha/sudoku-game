@@ -1,6 +1,7 @@
+"use strict";
 // Check if array have duplicate value
 const isDuplicatesValues = (array) => {
-  arrayFiltering = array.filter((elm) => elm !== "");
+  let arrayFiltering = array.filter((elm) => elm !== "");
   let checkUniques = new Set(arrayFiltering);
   if (arrayFiltering.length !== checkUniques.size) return true;
   return false;
@@ -61,4 +62,4 @@ const isValidSudoku = (board) => {
   return rowGood(board) && columnGood(board) && boxesGood(board);
 };
 
-exports.isValidSudoku = isValidSudoku;
+export { isValidSudoku };

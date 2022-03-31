@@ -1,5 +1,6 @@
+"use strict";
 const isDuplicatesValues = (array) => {
-  arrayFiltering = array.filter((elm) => elm !== ".");
+  let arrayFiltering = array.filter((elm) => elm !== "");
   let checkUniques = new Set(arrayFiltering);
   return arrayFiltering.length !== checkUniques.size;
 };
@@ -47,3 +48,4 @@ const boxesGood = (board, row, col) => {
 const isValidBox = (board, row, col) => {
   return rowGood(board, row) && columnGood(board, col) && boxesGood(board, row, col);
 };
+export { isValidBox };
