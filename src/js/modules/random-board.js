@@ -2,7 +2,7 @@
 How it Work?
 1- Set 10 valid random numbers.
 2- Try solve board.
-3- Is board solved, set random value in board empty.
+3- Is board solved, set random value in solved board empty value.
 4- Is board can't be solved do step 1. 
 */
 
