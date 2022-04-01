@@ -95,18 +95,17 @@ function startNewGame() {
   }
 
   //
-  countDownElm.innerHTML = `${timeSelector.getAttribute("value")} Minute`;
+  countDownElm.textContent = `${timeSelector.getAttribute("value")} Minute`;
   //
-  if (level == "hard") hints = 3;
-  else if (level == "medium") hints = 5;
-  else hints = 6;
+  if (level == "hard") hints = 10;
+  else if (level == "medium") hints = 12;
+  else hints = 15;
   hintValue.textContent = hints;
 
   // hide first screen
   firstScreenSection.classList.add("hide");
   // Get board and board with boardWithSolution
   [board, boardWithSolution] = selectDifficulty(level);
-  console.log(boardWithSolution);
   // Set Up board
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
