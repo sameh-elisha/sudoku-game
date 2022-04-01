@@ -3,8 +3,7 @@
 const isDuplicatesValues = (array) => {
   let arrayFiltering = array.filter((elm) => elm !== "");
   let checkUniques = new Set(arrayFiltering);
-  if (arrayFiltering.length !== checkUniques.size) return true;
-  return false;
+  return arrayFiltering.length !== checkUniques.size;
 };
 
 // Check row is good
