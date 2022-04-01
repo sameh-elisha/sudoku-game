@@ -1,5 +1,6 @@
 "use strict";
 import { selectDifficulty } from "./modules/random-board.js";
+import { isValidSudoku } from "./modules/valid-board.js";
 
 const boardSelector = document.querySelector(".board");
 const numbersBoxSelector = document.querySelector(".numbers");
@@ -21,7 +22,7 @@ let timeIndex = 0;
 let tempValue = "";
 const focusBox = "#0c8dea";
 const undoFocusBox = "#111112";
-let old = document.createElement("div");
+let oldBox = document.createElement("div");
 
 function timeChangeValue() {
   if (timeIndex == timeValues.length) timeIndex = 0;
@@ -50,11 +51,14 @@ function startNewGame() {
   firstScreenSection.classList.add("hide");
   // Get board and board with solution
   [board, solution] = selectDifficulty(level);
+  console.log(solution);
   // Set Up board
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
       const box = document.createElement("div");
       box.classList.add("box");
+      box.classList.add("-board");
+
       if ((j + 1) % 3 == 0 && j != 0) box.style.marginRight = "6px";
       if ((i + 1) % 3 == 0 && i != 0) box.style.marginBottom = "6px";
       box.textContent = board[i][j];
@@ -79,13 +83,14 @@ function startNewGame() {
     numbersBoxSelector.appendChild(box);
   }
   // Show second screen
+  solveBoard(board);
   secondScreenSection.classList.remove("hide");
 }
 function getNumber(e) {
-  old.style.backgroundColor = undoFocusBox;
+  oldBox.style.backgroundColor = undoFocusBox;
   if (!e.target.classList.contains("box")) return;
   tempValue = e.target.getAttribute("value");
-  old = e.target;
+  oldBox = e.target;
   e.target.style.backgroundColor = focusBox;
 }
 
@@ -97,6 +102,20 @@ function setNumber(e) {
   let [row, col] = e.target.getAttribute("index").split("");
   board[row][col] = tempValue;
   e.target.textContent = tempValue;
+}
+
+function validBoard(board) {
+  isValidSudoku(board) ? alert("Valid") : alert("Invalid.");
+}
+
+function solveBoard(board) {
+  const boxes = document.querySelectorAll(".-board");
+  boxes.forEach((box) => {
+    box.style.backgroundColor = "#010003";
+    let [row, col] = box.getAttribute("index").split("");
+    box.setAttribute("original", `no-mutate`);
+    box.textContent = solution[row][col];
+  });
 }
 
 newGameBtn.addEventListener("click", startNewGame);
