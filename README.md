@@ -14,6 +14,6 @@
 ![home2](https://user-images.githubusercontent.com/67038060/161341351-660db7ae-353c-4002-89be-56c3a1bb8b9f.PNG)
 
 ## Try game now:
-<a href="sameh-elisha.github.io/sudoku-game/src/" target="_blank">Live Game</a>
+<a href="https://sameh-elisha.github.io/sudoku-game/src/">Live Game</a>
 
  
