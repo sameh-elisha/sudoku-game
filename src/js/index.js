@@ -16,8 +16,14 @@ const solveBtn = document.querySelector(".solve");
 const checkBtn = document.querySelector(".check");
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
-const btnCloseModal = document.querySelector(".close-modal");
+const btnCloseCongrats = document.querySelector(".close-modal");
+const restGameBtn = document.querySelector(".back-game");
+const countDownElm = document.querySelector(".time-value");
+const hintValue = document.querySelector(".hint-value");
 
+let startingMinutes = 1;
+let time = startingMinutes * 60;
+let level = "hard";
 // Declare board, board With Solution
 let board, boardWithSolution;
 // Level Variables
@@ -35,12 +41,30 @@ const colorBoxValue = "#010003";
 // Declare oldBox just initial value as div
 let oldBox = document.createElement("div");
 
-function openModal() {
+let myTimer;
+let hints = 0;
+function updateCountDown() {
+  let minutes = Math.floor(time / 60) + "";
+  let second = (time % 60) + "";
+  if (time < 0) {
+    lockBoard();
+    snackBar("Time End");
+    countDownElm.innerHTML = `00:00`;
+    clearInterval(myTimer);
+  } else {
+    time--;
+    if (minutes.length === 1) minutes = "0" + minutes;
+    if (second.length === 1) second = "0" + second;
+    countDownElm.innerHTML = `${minutes}: ${second} `;
+  }
+}
+
+function openCongrats() {
   modal.classList.remove("hidden");
   overlay.classList.remove("hidden");
 }
 
-function closeModal() {
+function closeCongrats() {
   modal.classList.add("hidden");
   overlay.classList.add("hidden");
 }
@@ -60,13 +84,23 @@ function levelChangeValue() {
 }
 
 function startNewGame() {
-  let level = levelSelector.getAttribute("value");
-  let time = timeSelector.getAttribute("value");
+  startingMinutes = Math.floor(time / 60);
+  time = parseInt(timeSelector.getAttribute("value")) * 60;
+  myTimer = setInterval(updateCountDown, 1000);
+  level = levelSelector.getAttribute("value");
 
   if (!level || !time) {
-    alert("Choose Level and Time.");
+    snackBar("Choose Level and Time.");
     return;
   }
+
+  //
+  countDownElm.innerHTML = `${timeSelector.getAttribute("value")} Minute`;
+  //
+  if (level == "hard") hints = 3;
+  else if (level == "medium") hints = 5;
+  else hints = 6;
+  hintValue.textContent = hints;
 
   // hide first screen
   firstScreenSection.classList.add("hide");
@@ -85,6 +119,7 @@ function startNewGame() {
       box.textContent = board[i][j];
       if (board[i][j] != "") {
         box.style.backgroundColor = colorBoxValue;
+        box.style.textShadow = "1px 1px #ffff";
         box.setAttribute("original", `no-mutate`);
       }
       box.setAttribute("id", `${i}${j}`);
@@ -124,30 +159,35 @@ function setNumber(e) {
   let [row, col] = e.target.getAttribute("id").split("");
   board[row][col] = tempValue;
   e.target.textContent = tempValue;
+  e.target.style.color = "#FFF317";
   let numberOfValuesInBoard = board.flat().filter((elm) => elm !== "").length;
   if (numberOfValuesInBoard === 81 && isValidSudoku(board)) {
-    isValidSudoku(board) ? openModal() : null;
+    isValidSudoku(board) ? openCongrats() : null;
     lockBoard();
+    clearInterval(myTimer);
   }
 }
 // Check board is valid.
 function validBoard() {
-  isValidSudoku(board) ? alert("Valid") : alert("Invalid.");
+  isValidSudoku(board) ? snackBar("Valid") : snackBar("Invalid");
 }
 
 // Solve board.
 function solveBoard() {
+  clearInterval(myTimer);
   const boxes = document.querySelectorAll(".-board");
   boxes.forEach((box) => {
     box.style.backgroundColor = colorBoxValue;
     let [row, col] = box.getAttribute("id").split("");
     box.setAttribute("original", `no-mutate`);
-
     box.textContent = boardWithSolution[row][col];
   });
 }
 // Solve wrong box.
 function hint() {
+  if (hints == 0) return;
+  hints--;
+  hintValue.textContent = hints;
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
       const box = document.getElementById(`${i}${j}`);
@@ -155,13 +195,13 @@ function hint() {
         board[i][j] = boardWithSolution[i][j];
         box.style.backgroundColor = colorBoxValue;
         box.setAttribute("original", `no-mutate`);
-        box.style.backgroundColor = "rgba(0,150,0)";
-        box.style.color = "fff";
+        box.style.color = "rgba(0,150,0)";
         box.textContent = boardWithSolution[i][j];
         let numberOfValuesInBoard = board.flat().filter((elm) => elm !== "").length;
         if (numberOfValuesInBoard === 81 && isValidSudoku(board)) {
-          isValidSudoku(board) ? openModal() : null;
+          isValidSudoku(board) ? openCongrats() : null;
           lockBoard();
+          clearInterval(myTimer);
         }
         return;
       }
@@ -176,6 +216,29 @@ function lockBoard() {
   });
 }
 
+function removeAllChildNodes(parent) {
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+}
+function restartGame() {
+  removeAllChildNodes(boardSelector);
+  removeAllChildNodes(keyboardNumbers);
+  firstScreenSection.classList.remove("hide");
+  secondScreenSection.classList.add("hide");
+  clearInterval(myTimer);
+  countDownElm.innerHTML = "&nbsp;";
+}
+
+function snackBar(text) {
+  var x = document.getElementById("snackbar");
+  x.className = "show";
+  x.textContent = text;
+  setTimeout(() => {
+    x.className = x.className.replace("show", "");
+  }, 3000);
+}
+
 // Add Event Listener
 newGameBtn.addEventListener("click", startNewGame);
 levelSelector.addEventListener("click", levelChangeValue);
@@ -185,11 +248,11 @@ boardSelector.addEventListener("click", setNumber);
 hintBtn.addEventListener("click", hint);
 solveBtn.addEventListener("click", solveBoard);
 checkBtn.addEventListener("click", validBoard);
-btnCloseModal.addEventListener("click", closeModal);
-overlay.addEventListener("click", closeModal);
-
+btnCloseCongrats.addEventListener("click", closeCongrats);
+overlay.addEventListener("click", closeCongrats);
+restGameBtn.addEventListener("click", restartGame);
 document.addEventListener("keydown", function (e) {
   if (e.key === "Escape" && !modal.classList.contains("hidden")) {
-    closeModal();
+    closeCongrats();
   }
 });
