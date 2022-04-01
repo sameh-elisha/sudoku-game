@@ -10,6 +10,9 @@ const secondScreenSection = document.querySelector(".second-screen");
 const levelSelector = document.querySelector(".level");
 const timeSelector = document.querySelector(".time");
 const keyboardNumbers = document.querySelector(".numbers");
+const hintBtn = document.querySelector(".hint");
+const solveBtn = document.querySelector(".solve");
+const checkBtn = document.querySelector(".check");
 
 let board, solution;
 
@@ -83,7 +86,6 @@ function startNewGame() {
     numbersBoxSelector.appendChild(box);
   }
   // Show second screen
-  hint(board);
   secondScreenSection.classList.remove("hide");
 }
 function getNumber(e) {
@@ -102,13 +104,18 @@ function setNumber(e) {
   let [row, col] = e.target.getAttribute("id").split("");
   board[row][col] = tempValue;
   e.target.textContent = tempValue;
+  let numberOfValuesInBoard = board.flat().filter((elm) => elm !== "").length;
+  if (numberOfValuesInBoard === 81) {
+    isValidSudoku(board) ? alert("Congrats") : null;
+    lockBoard();
+  }
 }
 
-function validBoard(board) {
+function validBoard() {
   isValidSudoku(board) ? alert("Valid") : alert("Invalid.");
 }
 
-function solveBoard(board) {
+function solveBoard() {
   const boxes = document.querySelectorAll(".-board");
   boxes.forEach((box) => {
     box.style.backgroundColor = "#010003";
@@ -118,7 +125,7 @@ function solveBoard(board) {
   });
 }
 
-function hint(board) {
+function hint() {
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
       if (board[i][j] == "") {
@@ -129,14 +136,27 @@ function hint(board) {
         box.style.backgroundColor = "rgba(0,200,0)";
         box.style.color = "fff";
         box.textContent = solution[i][j];
+        let numberOfValuesInBoard = board.flat().filter((elm) => elm !== "").length;
+        if (numberOfValuesInBoard === 81) {
+          isValidSudoku(board) ? alert("Congrats") : null;
+          lockBoard();
+        }
         return;
       }
     }
   }
 }
-
+function lockBoard() {
+  const boxes = document.querySelectorAll(".-board");
+  boxes.forEach((box) => {
+    box.setAttribute("original", `no-mutate`);
+  });
+}
 newGameBtn.addEventListener("click", startNewGame);
 levelSelector.addEventListener("click", levelChangeValue);
 timeSelector.addEventListener("click", timeChangeValue);
 keyboardNumbers.addEventListener("click", getNumber);
 boardSelector.addEventListener("click", setNumber);
+hintBtn.addEventListener("click", hint);
+solveBtn.addEventListener("click", solveBoard);
+checkBtn.addEventListener("click", validBoard);
