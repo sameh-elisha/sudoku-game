@@ -1,7 +1,7 @@
 # Sudoku-game
  Sudoku  
 ## Functions:-
-- Random Board with different levels.
+- Random board with different levels.
 - Solve board.
 - Check board is valid.
 - Check only box is valid.
