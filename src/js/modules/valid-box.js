@@ -1,17 +1,18 @@
 "use strict";
+let board;
 const isDuplicatesValues = (array) => {
   let arrayFiltering = array.filter((elm) => elm !== "");
   let checkUniques = new Set(arrayFiltering);
   return arrayFiltering.length !== checkUniques.size;
 };
 
-const rowGood = (board, row) => {
+const rowGood = (row) => {
   let rowCheck = isDuplicatesValues(board[row]);
   if (rowCheck) return false;
   return true;
 };
 
-const columnGood = (board, col) => {
+const columnGood = (col) => {
   let columnSelect = [];
   for (let row = 0; row < 9; row++) {
     columnSelect[row] = board[row][col];
@@ -27,7 +28,7 @@ const helperBoxes = (num) => {
   return 6;
 };
 
-const boxesGood = (board, row, col) => {
+const boxesGood = (row, col) => {
   let selectRow = helperBoxes(row);
   let selectCol = helperBoxes(col);
 
@@ -45,7 +46,8 @@ const boxesGood = (board, row, col) => {
   return true;
 };
 
-const isValidBox = (board, row, col) => {
-  return rowGood(board, row) && columnGood(board, col) && boxesGood(board, row, col);
+const isValidBox = (boardCheck, row, col) => {
+  board = boardCheck;
+  return rowGood(row) && columnGood(col) && boxesGood(row, col);
 };
 export { isValidBox };

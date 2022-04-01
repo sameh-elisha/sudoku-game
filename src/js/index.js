@@ -13,6 +13,9 @@ const keyboardNumbers = document.querySelector(".numbers");
 const hintBtn = document.querySelector(".hint");
 const solveBtn = document.querySelector(".solve");
 const checkBtn = document.querySelector(".check");
+const modal = document.querySelector(".modal");
+const overlay = document.querySelector(".overlay");
+const btnCloseModal = document.querySelector(".close-modal");
 
 let board, solution;
 
@@ -26,6 +29,16 @@ let tempValue = "";
 const focusBox = "#0c8dea";
 const undoFocusBox = "#111112";
 let oldBox = document.createElement("div");
+
+function openModal() {
+  modal.classList.remove("hidden");
+  overlay.classList.remove("hidden");
+}
+
+function closeModal() {
+  modal.classList.add("hidden");
+  overlay.classList.add("hidden");
+}
 
 function timeChangeValue() {
   if (timeIndex == timeValues.length) timeIndex = 0;
@@ -105,8 +118,8 @@ function setNumber(e) {
   board[row][col] = tempValue;
   e.target.textContent = tempValue;
   let numberOfValuesInBoard = board.flat().filter((elm) => elm !== "").length;
-  if (numberOfValuesInBoard === 81) {
-    isValidSudoku(board) ? alert("Congrats") : null;
+  if (numberOfValuesInBoard === 81 && isValidSudoku(board)) {
+    isValidSudoku(board) ? openModal() : null;
     lockBoard();
   }
 }
@@ -121,6 +134,7 @@ function solveBoard() {
     box.style.backgroundColor = "#010003";
     let [row, col] = box.getAttribute("id").split("");
     box.setAttribute("original", `no-mutate`);
+
     box.textContent = solution[row][col];
   });
 }
@@ -128,17 +142,17 @@ function solveBoard() {
 function hint() {
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
-      if (board[i][j] == "") {
-        const box = document.getElementById(`${i}${j}`);
+      const box = document.getElementById(`${i}${j}`);
+      if (!box.getAttribute("original") && board[i][j] !== solution[i][j]) {
         board[i][j] = solution[i][j];
         box.style.backgroundColor = "#010003";
         box.setAttribute("original", `no-mutate`);
-        box.style.backgroundColor = "rgba(0,200,0)";
+        box.style.backgroundColor = "rgba(0,150,0)";
         box.style.color = "fff";
         box.textContent = solution[i][j];
         let numberOfValuesInBoard = board.flat().filter((elm) => elm !== "").length;
-        if (numberOfValuesInBoard === 81) {
-          isValidSudoku(board) ? alert("Congrats") : null;
+        if (numberOfValuesInBoard === 81 && isValidSudoku(board)) {
+          isValidSudoku(board) ? openModal() : null;
           lockBoard();
         }
         return;
@@ -152,6 +166,7 @@ function lockBoard() {
     box.setAttribute("original", `no-mutate`);
   });
 }
+
 newGameBtn.addEventListener("click", startNewGame);
 levelSelector.addEventListener("click", levelChangeValue);
 timeSelector.addEventListener("click", timeChangeValue);
@@ -160,3 +175,11 @@ boardSelector.addEventListener("click", setNumber);
 hintBtn.addEventListener("click", hint);
 solveBtn.addEventListener("click", solveBoard);
 checkBtn.addEventListener("click", validBoard);
+btnCloseModal.addEventListener("click", closeModal);
+overlay.addEventListener("click", closeModal);
+
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+    closeModal();
+  }
+});

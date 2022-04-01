@@ -1,4 +1,5 @@
 "use strict";
+let board;
 // Check if array have duplicate value
 const isDuplicatesValues = (array) => {
   let arrayFiltering = array.filter((elm) => elm !== "");
@@ -7,7 +8,7 @@ const isDuplicatesValues = (array) => {
 };
 
 // Check row is good
-const rowGood = (board) => {
+const rowGood = () => {
   let rowCheck = [];
   for (let i = 0; i < board.length; i++) {
     // Check Rows if has duplicate values
@@ -18,7 +19,7 @@ const rowGood = (board) => {
 };
 
 // Check column is good
-const columnGood = (board) => {
+const columnGood = () => {
   let columnSelect = [];
   for (let i = 0; i < board.length; i++) {
     // Select column && every 3 element in new array
@@ -34,7 +35,7 @@ const columnGood = (board) => {
 };
 
 // Check boxes is good
-const boxesGood = (board) => {
+const boxesGood = () => {
   let boxesCheck = [[], [], []];
   let c = 0;
   for (let i = 0; i < board.length; i++) {
@@ -57,8 +58,9 @@ const boxesGood = (board) => {
   return true;
 };
 
-const isValidSudoku = (board) => {
-  return rowGood(board) && columnGood(board) && boxesGood(board);
+const isValidSudoku = (boardCheck) => {
+  board = boardCheck;
+  return rowGood() && columnGood() && boxesGood();
 };
 
 export { isValidSudoku };
