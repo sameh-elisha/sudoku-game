@@ -66,7 +66,7 @@ function startNewGame() {
         box.style.backgroundColor = "#010003";
         box.setAttribute("original", `no-mutate`);
       }
-      box.setAttribute("index", `${i}${j}`);
+      box.setAttribute("id", `${i}${j}`);
       boardSelector.appendChild(box);
     }
   }
@@ -83,7 +83,7 @@ function startNewGame() {
     numbersBoxSelector.appendChild(box);
   }
   // Show second screen
-  solveBoard(board);
+  hint(board);
   secondScreenSection.classList.remove("hide");
 }
 function getNumber(e) {
@@ -99,7 +99,7 @@ function setNumber(e) {
   if (e.target.getAttribute("original") === "no-mutate") {
     return;
   }
-  let [row, col] = e.target.getAttribute("index").split("");
+  let [row, col] = e.target.getAttribute("id").split("");
   board[row][col] = tempValue;
   e.target.textContent = tempValue;
 }
@@ -112,10 +112,27 @@ function solveBoard(board) {
   const boxes = document.querySelectorAll(".-board");
   boxes.forEach((box) => {
     box.style.backgroundColor = "#010003";
-    let [row, col] = box.getAttribute("index").split("");
+    let [row, col] = box.getAttribute("id").split("");
     box.setAttribute("original", `no-mutate`);
     box.textContent = solution[row][col];
   });
+}
+
+function hint(board) {
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      if (board[i][j] == "") {
+        const box = document.getElementById(`${i}${j}`);
+        board[i][j] = solution[i][j];
+        box.style.backgroundColor = "#010003";
+        box.setAttribute("original", `no-mutate`);
+        box.style.backgroundColor = "rgba(0,200,0)";
+        box.style.color = "fff";
+        box.textContent = solution[i][j];
+        return;
+      }
+    }
+  }
 }
 
 newGameBtn.addEventListener("click", startNewGame);
