@@ -2,6 +2,7 @@
 import { selectDifficulty } from "./modules/random-board.js";
 import { isValidSudoku } from "./modules/valid-board.js";
 
+// Select HTML elements
 const boardSelector = document.querySelector(".board");
 const numbersBoxSelector = document.querySelector(".numbers");
 const newGameBtn = document.querySelector(".new-game");
@@ -17,17 +18,21 @@ const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const btnCloseModal = document.querySelector(".close-modal");
 
-let board, solution;
-
+// Declare board, board With Solution
+let board, boardWithSolution;
+// Level Variables
 let levelsValues = ["Easy", "medium", "hard"];
 let levelIndex = 0;
-
+// Time Variables
 let timeValues = ["3", "5", "8"];
 let timeIndex = 0;
-
+// saving keyboard value.
 let tempValue = "";
+// Constant Colors.
 const focusBox = "#0c8dea";
 const undoFocusBox = "#111112";
+const colorBoxValue = "#010003";
+// Declare oldBox just initial value as div
 let oldBox = document.createElement("div");
 
 function openModal() {
@@ -65,9 +70,9 @@ function startNewGame() {
 
   // hide first screen
   firstScreenSection.classList.add("hide");
-  // Get board and board with solution
-  [board, solution] = selectDifficulty(level);
-  console.log(solution);
+  // Get board and board with boardWithSolution
+  [board, boardWithSolution] = selectDifficulty(level);
+  console.log(boardWithSolution);
   // Set Up board
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
@@ -79,7 +84,7 @@ function startNewGame() {
       if ((i + 1) % 3 == 0 && i != 0) box.style.marginBottom = "6px";
       box.textContent = board[i][j];
       if (board[i][j] != "") {
-        box.style.backgroundColor = "#010003";
+        box.style.backgroundColor = colorBoxValue;
         box.setAttribute("original", `no-mutate`);
       }
       box.setAttribute("id", `${i}${j}`);
@@ -101,6 +106,7 @@ function startNewGame() {
   // Show second screen
   secondScreenSection.classList.remove("hide");
 }
+// Get number from keyboard.
 function getNumber(e) {
   oldBox.style.backgroundColor = undoFocusBox;
   if (!e.target.classList.contains("box")) return;
@@ -109,6 +115,7 @@ function getNumber(e) {
   e.target.style.backgroundColor = focusBox;
 }
 
+// Set number in box.
 function setNumber(e) {
   if (!e.target.classList.contains("box")) return;
   if (e.target.getAttribute("original") === "no-mutate") {
@@ -123,33 +130,34 @@ function setNumber(e) {
     lockBoard();
   }
 }
-
+// Check board is valid.
 function validBoard() {
   isValidSudoku(board) ? alert("Valid") : alert("Invalid.");
 }
 
+// Solve board.
 function solveBoard() {
   const boxes = document.querySelectorAll(".-board");
   boxes.forEach((box) => {
-    box.style.backgroundColor = "#010003";
+    box.style.backgroundColor = colorBoxValue;
     let [row, col] = box.getAttribute("id").split("");
     box.setAttribute("original", `no-mutate`);
 
-    box.textContent = solution[row][col];
+    box.textContent = boardWithSolution[row][col];
   });
 }
-
+// Solve wrong box.
 function hint() {
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
       const box = document.getElementById(`${i}${j}`);
-      if (!box.getAttribute("original") && board[i][j] !== solution[i][j]) {
-        board[i][j] = solution[i][j];
-        box.style.backgroundColor = "#010003";
+      if (!box.getAttribute("original") && board[i][j] !== boardWithSolution[i][j]) {
+        board[i][j] = boardWithSolution[i][j];
+        box.style.backgroundColor = colorBoxValue;
         box.setAttribute("original", `no-mutate`);
         box.style.backgroundColor = "rgba(0,150,0)";
         box.style.color = "fff";
-        box.textContent = solution[i][j];
+        box.textContent = boardWithSolution[i][j];
         let numberOfValuesInBoard = board.flat().filter((elm) => elm !== "").length;
         if (numberOfValuesInBoard === 81 && isValidSudoku(board)) {
           isValidSudoku(board) ? openModal() : null;
@@ -160,6 +168,7 @@ function hint() {
     }
   }
 }
+// Close all fields in board.
 function lockBoard() {
   const boxes = document.querySelectorAll(".-board");
   boxes.forEach((box) => {
@@ -167,6 +176,7 @@ function lockBoard() {
   });
 }
 
+// Add Event Listener
 newGameBtn.addEventListener("click", startNewGame);
 levelSelector.addEventListener("click", levelChangeValue);
 timeSelector.addEventListener("click", timeChangeValue);
