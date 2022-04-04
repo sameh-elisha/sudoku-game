@@ -1,6 +1,7 @@
 "use strict";
 import { selectDifficulty } from "./modules/random-board.js";
 import { isValidSudoku } from "./modules/valid-board.js";
+import { isValidBox } from "./modules/valid-box.js";
 
 // Select HTML elements
 const boardSelector = document.querySelector(".board");
@@ -165,9 +166,9 @@ function setNumber(e) {
     lockBoard();
     clearInterval(myTimer);
   }
-  if (!isValidSudoku(board)) {
+  if (!isValidBox(board, row, col)) {
     board[row][col] = "";
-    e.target.textContent = "";
+    e.target.style.color = "rgba(194, 5, 5, 0.999)";
     snackBar("invalid");
   }
 }
