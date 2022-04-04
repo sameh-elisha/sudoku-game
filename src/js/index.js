@@ -165,10 +165,15 @@ function setNumber(e) {
     lockBoard();
     clearInterval(myTimer);
   }
+  if (!isValidSudoku(board)) {
+    board[row][col] = "";
+    e.target.textContent = "";
+    snackBar("invalid");
+  }
 }
 // Check board is valid.
 function validBoard() {
-  isValidSudoku(board) ? snackBar("Valid") : snackBar("Invalid");
+  return isValidSudoku(board) ? true : false;
 }
 
 // Solve board.
@@ -246,7 +251,7 @@ keyboardNumbers.addEventListener("click", getNumber);
 boardSelector.addEventListener("click", setNumber);
 hintBtn.addEventListener("click", hint);
 solveBtn.addEventListener("click", solveBoard);
-checkBtn.addEventListener("click", validBoard);
+// checkBtn.addEventListener("click", validBoard);
 btnCloseCongrats.addEventListener("click", closeCongrats);
 overlay.addEventListener("click", closeCongrats);
 restGameBtn.addEventListener("click", restartGame);
